@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Teste Firebase Firestore</title>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js"></script>
+</head>
+
+<body>
+
+    <h2>Salvar itens selecionados no Firestore</h2>
+
+    <button id="salvar">Salvar itens</button>
+
+    <script>
+        // Configuração do Firebase (substitua pelos seus dados)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDs4CN5F4Imua11jkqBhBjg1RWXIFp78rU",
+            authDomain: "formulario-itens.firebaseapp.com",
+            projectId: "formulario-itens",
+            storageBucket: "formulario-itens.firebasestorage.app",
+            messagingSenderId: "101285133052",
+            appId: "1:101285133052:web:6f37b5bc2361f9fd2ab579",
+            measurementId: "G-KPPM3T8E2D"
+        };
+
+        // Inicializa o Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.getElementById("salvar").addEventListener("click", () => {
+            // Exemplo: itens que você quer salvar
+            const itensSelecionados = ["Jogo de copos", "Travesseiros", "Liquidificador"];
+
+            // Salvar em uma coleção chamada "selecoes"
+            db.collection("selecoes").add({
+                itens: itensSelecionados,
+                timestamp: new Date()
+            })
+                .then(() => {
+                    alert("Itens salvos com sucesso!");
+                })
+                .catch((error) => {
+                    console.error("Erro ao salvar itens: ", error);
+                    alert("Erro ao salvar itens");
+                });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Itens Compartilhada</title>
+    <link rel="icon" type="image/png" href="imagens/favicon.png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background: linear-gradient(to bottom, #e4e3e3, #e2dee2, #c2c0c1, #bbbbbb, #b9b9b9, #a0a0a0);
+            color: #000000;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .categoria {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .categoria h2 {
+            display: flex;
+            align-items: center;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .categoria img {
+            width: 40px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        label {
+            display: block;
+            margin: 8px 0;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        label:hover {
+            background-color: #a8f1eb;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        button {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #4a90e2;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #357bd8;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .modal ul {
+            text-align: left;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .titulo-com-imagem {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .titulo-com-imagem img {
+            width: 45px;
+            height: 45px;
+        }
+
+        .itens-categoria {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="titulo-com-imagem">
+        <img src="imagens/choice.png" alt="Ícone" />
+        <h1>Sugestão de Presente</h1>
+    </div>
+
+    <form id="form-itens">
+
+        <div class="categoria">
+            <h2 onclick="alternarVisibilidade('cozinha-itens')">
+                <img src="imagens/kitchen.png" alt="Cozinha">Cozinha
+            </h2>
+            <div class="itens-categoria" id="cozinha-itens"></div>
+        </div>
+
+        <div class="categoria">
+            <h2 onclick="alternarVisibilidade('quarto-itens')">
+                <img src="imagens/bedroom.png" alt="Quarto">Quarto
+            </h2>
+            <div class="itens-categoria" id="quarto-itens"></div>
+        </div>
+
+        <div class="categoria">
+            <h2 onclick="alternarVisibilidade('banheiro-itens')">
+                <img src="imagens/bath.png" alt="Banheiro">Banheiro
+            </h2>
+            <div class="itens-categoria" id="banheiro-itens"></div>
+        </div>
+
+        <div class="categoria">
+            <h2 onclick="alternarVisibilidade('lavanderia-itens')">
+                <img src="imagens/laundry-machine.png" alt="Lavanderia">Lavanderia
+            </h2>
+            <div class="itens-categoria" id="lavanderia-itens"></div>
+        </div>
+
+        <div class="categoria">
+            <h2 onclick="alternarVisibilidade('eletro-itens')">
+                <img src="imagens/iron.png" alt="Eletrodomésticos">Eletrodomésticos
+            </h2>
+            <div class="itens-categoria" id="eletro-itens"></div>
+        </div>
+
+        <button type="submit">✅ Confirmar Seleção</button>
+    </form>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3>Itens selecionados:</h3>
+            <ul id="modal-list"></ul>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const itens = {
+            cozinha: [
+                "Jogo de panelas", "Jogo de talheres", "Jogo de pratos", "Jogo de copos", "Jogo de xicara",
+                "Jogo de taças", "Jogo de sobremessa", "Kit de mantimentos (arroz, feijão, macarrão, etc.)",
+                "Kit de mantimentos (oleo, azeite, vinagre, etc.)", "Panos de prato", "Escorredor de louça",
+                "Escorredor de macarrão", "Escorredor de arroz", "Forma de alumínio", "Travessa de vidro",
+                "Tábua de corte (vidro)", "Abridor de latas e garrafas", "Conchas e utensílios de silicone (espátula, colher de arroz, etc.)",
+                "Bule", "Jarra de vidro", "Garrafa térmica", "Panela de Pressão"
+            ],
+            quarto: ["Kit lençol com fronha", "Travesseiros", "Cortina"],
+            banheiro: ["Kit toalha de banho", "Lixeira", "Kit banheiro (porta sabonete, escova, etc)"],
+            lavanderia: [, "Cesto de roupa suja", "Jogo de tapetes", "Moop"],
+            eletro: ["Liquidificador", "Ferro de passar"]
+        };
+
+        const itensSelecionados = []; // Se quiser ocultar já selecionados
+
+        function criarCheckboxes(categoria, containerId) {
+            const container = document.getElementById(containerId);
+            itens[categoria].forEach(item => {
+                if (!itensSelecionados.includes(item)) {
+                    const label = document.createElement("label");
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.name = "itens";
+                    checkbox.value = item;
+                    label.appendChild(checkbox);
+                    label.append(" " + item);
+                    container.appendChild(label);
+                }
+            });
+        }
+
+        criarCheckboxes("cozinha", "cozinha-itens");
+        criarCheckboxes("quarto", "quarto-itens");
+        criarCheckboxes("banheiro", "banheiro-itens");
+        criarCheckboxes("lavanderia", "lavanderia-itens");
+        criarCheckboxes("eletro", "eletro-itens");
+
+        function alternarVisibilidade(id) {
+            const container = document.getElementById(id);
+            container.style.display = container.style.display === "none" ? "block" : "none";
+        }
+
+        document.getElementById("form-itens").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const selecionadosCheckboxes = Array.from(document.querySelectorAll("input[name='itens']:checked"));
+            const selecionados = selecionadosCheckboxes.map(cb => cb.value);
+
+            const modal = document.getElementById("modal");
+            const modalList = document.getElementById("modal-list");
+            modalList.innerHTML = "";
+            selecionados.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                modalList.appendChild(li);
+            });
+
+            modal.style.display = "flex";
+
+            selecionadosCheckboxes.forEach(cb => {
+                cb.closest("label").remove();
+            });
+        });
+
+        function fecharModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        document.getElementById("modal").addEventListener("click", function (e) {
+            if (e.target === this) {
+                fecharModal();
+            }
+        });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                fecharModal();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
